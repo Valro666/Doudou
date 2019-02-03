@@ -19,6 +19,9 @@ public class Observation {
 	public final static int POSITION_CAPTEUR_1 = 1;
 	public final static int POSITION_CAPTEUR_2 = 4;
 
+	public boolean cpt1 = false;
+	public boolean cpt2 = false;
+
 	// TODO
 
 	/**
@@ -37,7 +40,9 @@ public class Observation {
 	 * constructeur observation
 	 */
 	public Observation(boolean b1, boolean b2) {
-		throw new Error(); // ** A COMPLETER **
+		cpt1 = b1;
+		cpt2 = b2;
+		// throw new Error(); // ** A COMPLETER **
 	}
 
 	/**
