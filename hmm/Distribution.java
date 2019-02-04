@@ -2,7 +2,9 @@ package hmm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * permet de gérer une densité de probabilité sur des Objets E quelconques
@@ -48,7 +50,8 @@ public class Distribution<E> {
 	}
 
 	/**
-	 * Constructeur genere une densité avec les memes états mais probabilités nulles
+	 * Constructeur genere une densité avec les memes états mais probabilités
+	 * nulles
 	 * 
 	 * @param liste
 	 *            des états de la densité
@@ -112,7 +115,20 @@ public class Distribution<E> {
 		// TODO a faire par etudiants
 		// **********************************************************************************
 		Random r = new Random();
-		return (E) prob.get(r.nextDouble());
+		double v = r.nextDouble();
+		double tmp = 0;
+
+		Set<Entry<E, Double>> t = prob.entrySet();
+		Set<E> a = prob.keySet();
+		Object[] b = a.toArray();
+		for (int i = 0; i < b.length; i++) {
+			tmp = tmp + prob.get(b[i]);
+			if (tmp > v) {
+				return (E) b[i];
+			}
+		}
+
+		return (E) b[b.length];
 
 		// throw new Error(); // ** A COMPLETER **
 	}

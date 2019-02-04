@@ -66,7 +66,20 @@ public class HMM {
 		// a faire par etudiants
 		// **********************************************************************************
 
-		throw new Error(); // ** A COMPLETER **
+		// this.matriceTransition.transition;
+
+		List<State> s = State.getAll();
+
+		// Object tmp = d.clone();
+		
+		Distribution trib = new Distribution<>();
+		
+		
+		
+
+		return null;
+
+		// throw new Error(); // ** A COMPLETER **
 	}
 
 	/**
