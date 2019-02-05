@@ -14,7 +14,7 @@ public class ProcessusTransition {
 	 * valeur : densite sur s_t+1 = P(S_t+1/S_t) <br>
 	 * 
 	 */
-	protected Map<State, Distribution<State>> transition;
+	public Map<State, Distribution<State>> transition; /// a repasser en protected apres les tests nulls
 
 	/**
 	 * creation des transitions correspondant au hamster
@@ -71,9 +71,9 @@ public class ProcessusTransition {
 			transition.put(ss[(i)], d);
 		}
 
-		for (State sd : ss) {
-			System.out.println(sd.toString() + " " + transition.get(sd).toString());
-		}
+//		for (State sd : ss) {
+//			System.out.println(sd.toString() + " " + transition.get(sd).toString());
+//		}
 
 		// creer la table de transition
 		// throw new Error(); // ** A COMPLETER **
@@ -127,5 +127,11 @@ public class ProcessusTransition {
 		// throw new Error(); // ** A COMPLETER **
 		return win;
 	}
+
+	@Override
+	public String toString() {
+		return "" + transition + "";
+	}
+	
 
 }

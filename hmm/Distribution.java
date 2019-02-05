@@ -142,7 +142,7 @@ public class Distribution<E> {
 			res += clef + "->" + (((int) (this.prob.get(clef) * 1000)) * 1. / 1000);
 			res += ", ";
 		}
-		return (res);
+		return (res+"");
 	}
 
 }

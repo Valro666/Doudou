@@ -30,7 +30,7 @@ public class HMM {
 	 */
 	public HMM() {
 		// creation des lois de probabilite
-		this.matriceObservation = new ProcessusObservation();
+		// this.matriceObservation = new ProcessusObservation();
 		this.matriceTransition = new ProcessusTransition();
 	}
 
@@ -59,7 +59,7 @@ public class HMM {
 	 * 
 	 * @param densite
 	 *            à instant t-1
-	 * @return densite à instant t
+	 * @return densite à instant ts
 	 */
 	public Distribution<State> maJTransition(Distribution<State> d) {
 		// **********************************************************************************
@@ -68,16 +68,44 @@ public class HMM {
 
 		// this.matriceTransition.transition;
 
+		ArrayList<Double> ald = new ArrayList<>();
+
 		List<State> s = State.getAll();
 
-		// Object tmp = d.clone();
-		
-		Distribution trib = new Distribution<>();
-		
-		
-		
+		List<State> all = State.getAll();
 
-		return null;
+		// d.getProba(null);
+		Distribution ert = new Distribution(d);
+
+		for (int i = 0; i < all.size(); i++) {
+			double res = 0.0;
+			Object tmp = null;
+			for (State ll : all) {
+				tmp = ll;
+				// ald.add(d.getProba(ll));
+
+				// System.out.println(this.matriceTransition.probaTransition(ll,
+				// all.get(i)) + " " + d.getProba(ll));
+				// System.out.println();
+				res = res + (this.matriceTransition.probaTransition(ll, all.get(i)) * d.getProba(ll));
+			}
+
+			ert.setProba(tmp, res);
+			// System.out.println();
+			ald.add(res);
+		}
+
+		// Object tmp = d.clone();
+
+		Distribution trib = new Distribution<>();
+
+		for (int i = 0; i < all.size(); i++) {
+			trib.setProba(all.get(i), ald.get(i));
+		}
+		// trib.setProba(element, p);
+
+		// System.out.println(ald);
+		return trib;
 
 		// throw new Error(); // ** A COMPLETER **
 	}
