@@ -30,7 +30,7 @@ public class HMM {
 	 */
 	public HMM() {
 		// creation des lois de probabilite
-		// this.matriceObservation = new ProcessusObservation();
+		this.matriceObservation = new ProcessusObservation();
 		this.matriceTransition = new ProcessusTransition();
 	}
 
@@ -66,45 +66,34 @@ public class HMM {
 		// a faire par etudiants
 		// **********************************************************************************
 
-		// this.matriceTransition.transition;
-
 		ArrayList<Double> ald = new ArrayList<>();
-
-		List<State> s = State.getAll();
 
 		List<State> all = State.getAll();
 
-		// d.getProba(null);
-		Distribution ert = new Distribution(d);
+		// Distribution ert = new Distribution(d);
 
 		for (int i = 0; i < all.size(); i++) {
 			double res = 0.0;
 			Object tmp = null;
 			for (State ll : all) {
 				tmp = ll;
-				// ald.add(d.getProba(ll));
-
-				// System.out.println(this.matriceTransition.probaTransition(ll,
-				// all.get(i)) + " " + d.getProba(ll));
-				// System.out.println();
 				res = res + (this.matriceTransition.probaTransition(ll, all.get(i)) * d.getProba(ll));
 			}
 
-			ert.setProba(tmp, res);
-			// System.out.println();
+			// ert.setProba(tmp, res);
 			ald.add(res);
 		}
-
-		// Object tmp = d.clone();
 
 		Distribution trib = new Distribution<>();
 
 		for (int i = 0; i < all.size(); i++) {
 			trib.setProba(all.get(i), ald.get(i));
 		}
-		// trib.setProba(element, p);
+		double b = trib.calculNorme();
+		for (int i = 0; i < all.size(); i++) {
+			trib.setProba(all.get(i), ald.get(i) / b);
+		}
 
-		// System.out.println(ald);
 		return trib;
 
 		// throw new Error(); // ** A COMPLETER **
@@ -123,8 +112,29 @@ public class HMM {
 		// **********************************************************************************
 		// a faire par etudiants
 		// **********************************************************************************
+		Distribution<State> tmp = d;// maJTransition(d);
+		// System.out.println(tmp + " inter");
 
-		throw new Error(); // ** A COMPLETER **
+		List<State> all = State.getAll();
+
+		// double b = tmp.getProba(State.getAll().get(0));
+
+		for (State ll : all) {
+			tmp.setProba(ll, tmp.getProba(ll) * this.matriceObservation.probaObservation(o, ll));
+		}
+
+		double norme = tmp.calculNorme();
+
+		for (State ll : all) {
+			tmp.setProba(ll, tmp.getProba(ll) / norme);
+		}
+		// double b2 = tmp.getProba(State.getAll().get(0));
+
+		// System.out.println(b2/b+" doit etre egal a une casse de matrice
+		// obs");
+
+		return tmp;
+
 	}
 
 	/**
@@ -139,7 +149,16 @@ public class HMM {
 		// a faire par etudiants
 		// **********************************************************************************
 
-		throw new Error(); // ** A COMPLETER **
+		// Distribution<State> a = null;
+		//
+		// // a = MaJObservation(initiale, o);
+		// // a = maJTransition(a);
+		//
+		// a = maJTransition(initiale);
+		// a = MaJObservation(a, o);
+//		return MaJObservation(maJTransition(initiale), o);
+		return MaJObservation(maJTransition(initiale), o);
+		
 	}
 
 	/**
@@ -158,7 +177,19 @@ public class HMM {
 		// a faire par etudiants
 		// **********************************************************************************
 
-		throw new Error(); // ** A COMPLETER **
+		// if (l.size() == 0) {
+		// return d;
+		// } else {
+		// Observation o = l.remove(l.size()-1);
+		// return filtrage(this.propagation(d, o), l);
+		// }
+		Distribution<State> tmp = null;
+		
+		for (Observation o : l) {
+			tmp = this.propagation(d, o);
+		}
+		return tmp;
+
 	}
 
 	/**

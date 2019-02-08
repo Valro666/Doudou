@@ -1,6 +1,7 @@
 package hmm;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -75,12 +76,19 @@ public class Distribution<E> {
 		// **********************************************************************************
 
 		double tmp = 0;
+		double norme = calculNorme();
 
+		// List<State> all = State.getAll();
+
+		Set<E> all = prob.keySet();
 		for (Double e : prob.values()) {
 			// tmp = tmp + e;
 			e = e / calculNorme();
 		}
-
+		// Object ll;
+		for (E ll : all) {
+			prob.replace(ll, prob.get(ll) / norme);
+		}
 		// throw new Error(); // ** A COMPLETER **
 	}
 
@@ -142,7 +150,7 @@ public class Distribution<E> {
 			res += clef + "->" + (((int) (this.prob.get(clef) * 1000)) * 1. / 1000);
 			res += ", ";
 		}
-		return (res+"");
+		return (res + "\n");
 	}
 
 }
