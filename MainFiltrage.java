@@ -21,8 +21,14 @@ public class MainFiltrage {
 		//
 		init.setProba(all.get(0), 0.5);
 		init.setProba(all.get(1), 0.5);
+		
+		Distribution init2 = new Distribution(m.matriceTransition.transition.get(all.get(0)));
+		//
+		init2.setProba(all.get(0), 1);
 		// Observation obs = o.get(3);
+		System.out.println("fitrage");
 		System.out.println(init);
+		System.out.println(init2);
 
 		ArrayList<Observation> alo = new ArrayList<>();
 		alo.add(o.get(3));
@@ -31,8 +37,12 @@ public class MainFiltrage {
 		System.out.println(alo);
 
 		Distribution azerty = m.filtrage(init, alo);
-		System.out.println("S1->0.786, S2->0.135, S3->0.0, S4->0.0, S5->0.0, S6->0.0, S7->0.019, S0->0.058, <- a obtenir");
+		Distribution azerty2 = m.filtrage(init2, alo);
+		System.out.println("S1->0.519, S2->0.109, S3->0.331, S4->0.0, S5->0.0, S6->0.001, S7->0.012, S0->0.026, <- a obtenir");
+		System.out.println(init+"<- initial");
 		System.out.println(azerty+" <- obtenu");
+		System.out.println(init2+"<- initial2");
+		System.out.println(azerty2+" <- obtenu2");
 
 		// Distribution dis = m.maJTransition(init);
 		// dis = m.maJTransition(dis);

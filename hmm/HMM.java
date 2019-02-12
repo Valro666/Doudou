@@ -93,6 +93,7 @@ public class HMM {
 		for (int i = 0; i < all.size(); i++) {
 			trib.setProba(all.get(i), ald.get(i) / b);
 		}
+		trib.normalise();
 
 		return trib;
 
@@ -125,9 +126,10 @@ public class HMM {
 
 		double norme = tmp.calculNorme();
 
-		for (State ll : all) {
+		/*for (State ll : all) {
 			tmp.setProba(ll, tmp.getProba(ll) / norme);
-		}
+		}*/
+		tmp.normalise();
 		// double b2 = tmp.getProba(State.getAll().get(0));
 
 		// System.out.println(b2/b+" doit etre egal a une casse de matrice
@@ -148,16 +150,9 @@ public class HMM {
 		// **********************************************************************************
 		// a faire par etudiants
 		// **********************************************************************************
-
-		// Distribution<State> a = null;
-		//
-		// // a = MaJObservation(initiale, o);
-		// // a = maJTransition(a);
-		//
-		// a = maJTransition(initiale);
-		// a = MaJObservation(a, o);
-//		return MaJObservation(maJTransition(initiale), o);
-		return MaJObservation(maJTransition(initiale), o);
+		Distribution<State> ds = MaJObservation(maJTransition(initiale), o);
+		System.out.println(ds);
+		return ds;
 		
 	}
 
@@ -177,17 +172,11 @@ public class HMM {
 		// a faire par etudiants
 		// **********************************************************************************
 
-		// if (l.size() == 0) {
-		// return d;
-		// } else {
-		// Observation o = l.remove(l.size()-1);
-		// return filtrage(this.propagation(d, o), l);
-		// }
-		Distribution<State> tmp = null;
-		
-		for (Observation o : l) {
-			tmp = this.propagation(d, o);
+		Distribution<State> tmp = this.propagation(d, l.get(0));
+		for(int i = 1 ; i < l.size() ;i++){
+			tmp = this.propagation(tmp, l.get(i));
 		}
+		
 		return tmp;
 
 	}
