@@ -57,8 +57,26 @@ public class PanelObservation extends JPanel {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				// contour
-				g.setColor(Color.black);
-				g.drawRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE);
+				if (((i == 1) && (j == 0)) && systeme.lastObservation != null) {
+					if (systeme.lastObservation.cpt1 == true) {
+						g.setColor(Color.green);
+						g.fillRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE);
+					} else {
+						g.setColor(Color.red);
+						g.fill3DRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE, true);
+					}
+				} else if (((i == 2) && (j == 2)) && systeme.lastObservation != null) {
+					if (systeme.lastObservation.cpt2 == true) {
+						g.setColor(Color.green);
+						g.fillRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE);
+					} else {
+						g.setColor(Color.red);
+						g.fill3DRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE, true);
+					}
+				} else {
+					g.setColor(Color.black);
+					g.drawRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE);
+				}
 			}
 		}
 

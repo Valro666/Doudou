@@ -44,7 +44,11 @@ public class Systeme extends Observable {
 	 *            la distribution initiale sur l'etat
 	 */
 	public Systeme(HMM hmm, Distribution<State> initiale) {
-		throw new Error(); // ** A COMPLETER **
+		modele = hmm;
+		distributionCourante = initiale;
+		etatCourant = initiale.tirage();
+
+		// throw new Error(); // ** A COMPLETER **
 	}
 
 	/**
@@ -58,7 +62,13 @@ public class Systeme extends Observable {
 	 * @return couple etat t+1 , observation a l'instant t+1
 	 */
 	public Observation evoluerEtatReel() {
-		throw new Error(); // ** A COMPLETER **
+
+		// modele.evoluerEtat(etatCourant);
+		distributionCourante = modele.maJTransition(distributionCourante);
+		etatCourant = distributionCourante.tirage();
+
+		return modele.observer(etatCourant);
+		// throw new Error(); // ** A COMPLETER **
 	}
 
 	/**
@@ -68,7 +78,12 @@ public class Systeme extends Observable {
 	 *            observation reçue
 	 */
 	public void mettreAjourBelieef(Observation o) {
-		throw new Error(); // ** A COMPLETER **
+
+		distributionCourante = modele.MaJObservation(distributionCourante, o);
+
+		lastObservation = o;
+		// modele.propagation(distributionCourante, o);
+		// throw new Error(); // ** A COMPLETER **
 	}
 
 	/**
@@ -76,7 +91,8 @@ public class Systeme extends Observable {
 	 */
 	public void evoluerSysteme() {
 		// throw new Error(); // ** A COMPLETER **
-
+		mettreAjourBelieef(evoluerEtatReel());
+		System.out.println(this.distributionCourante);
 		// metter à jour la vue
 		setChanged();
 		notifyObservers();

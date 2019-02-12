@@ -18,6 +18,11 @@ public class ProcessusObservation {
 	static double paslaactiv = 0.2;
 	static double paslapasactiv = 0.8;
 
+	double fneg = 0.1;
+	double vneg = 0.9;
+	double fpos = 0.2;
+	double vpos = 0.8;
+
 	/**
 	 * matrice d'observation qui associe à un état et une distribution sur les
 	 * observations obtenues dans cet état
@@ -28,112 +33,84 @@ public class ProcessusObservation {
 	 * </ul>
 	 * <p>
 	 */
-	protected Map<State, Distribution<Observation>> observation;
+	public Map<State, Distribution<Observation>> observation;
 
 	/**
 	 * construction de la matrice d'observation
 	 */
 	public ProcessusObservation() {
-		// throw new Error(); // ** A COMPLETER **
+
 		observation = new HashMap<>();
-		double[][] tmp = new double[4][8];
 
-		double[][] tmp2 = new double[4][8];
-
-		int z = 0;
-
-		for (int x = 0; x < tmp.length; x++) {
-			for (int y = 0; y < tmp[x].length; y++) {
-				if (z < 2) {
-
-					if (y == 1) {
-						tmp[x][y] = lapasactiv;
-					} /*
-						 * else if
-						 * 
-						 * (y == 4) { tmp[x][y] = paslapasactiv; }
-						 */else {
-						tmp[x][y] = paslapasactiv;
-					}
-				} else {
-					if (y == 1) {
-						tmp[x][y] = laactiv;
-					} else {
-						tmp[x][y] = paslaactiv;
-					}
-				}
-
-			}
-			z++;
-		}
-		z = 0;
-		for (int x = 0; x < tmp2.length; x++) {
-			for (int y = 0; y < tmp2[x].length; y++) {
-				if (z % 2 == 0) {
-
-					if (y == 4) {
-						tmp2[x][y] = lapasactiv;
-					} else {
-						tmp2[x][y] = paslapasactiv;
-					}
-				} else {
-					if (y == 4) {
-						tmp2[x][y] = laactiv;
-					} else {
-						tmp2[x][y] = paslaactiv;
-					}
-				}
-
-			}
-			z++;
-		}
-
-		// for (int x = 0; x < tmp.length; x++) {
-		// for (int y = 0; y < tmp[x].length; y++) {
-		// System.out.print(tmp[x][y] + " ");
-		// }
-		// System.out.println();
-		// }
-		// System.out.println();
-
-		for (int x = 0; x < tmp2.length; x++) {
-			for (int y = 0; y < tmp2[x].length; y++) {
-				tmp2[x][y] = tmp2[x][y] * tmp[x][y];
-
-				// System.out.print(tmp2[x][y] + " ");
-			}
-			// System.out.println();
-		}
 		List<Observation> oll = Observation.getAll();
 		List<State> all = State.getAll();
 
-		Distribution d = new Distribution<>();
+		Distribution<Observation> oo = new Distribution<Observation>();
+		oo = new Distribution<>(oo);
 
-		// for (Observation o : oll) {
-		for (int j = 0; j < tmp2[0].length; j++) {
-			d = new Distribution<>();
-			for (int i = 0; i < tmp2.length; i++) {
-				d.setProba(oll.get(i), tmp2[i][j]);
-			}
-			observation.put(all.get(j), d);
+		for (State lll : all) {
+			observation.put(lll, new Distribution<>(oo));
 		}
-		// }
 
-		// System.out.println(d);
-		// System.out.println(observation);
-
+		for (int j = 0; j < all.size(); j++) {
+			if ((j == 1) || (j == 4)) {
+				Distribution<Observation> a = observation.get(all.get(j));
+				if (j == 1) {
+					for (int i = 0; i < 4; i++) {
+						a.setProba(oll.get(i), i);
+						if (oll.get(i).num_o == 1) {
+							a.setProba(oll.get(i), lapasactiv * paslapasactiv);
+						}
+						if (oll.get(i).num_o == 2) {
+							a.setProba(oll.get(i), lapasactiv * paslaactiv);
+						}
+						if (oll.get(i).num_o == 3) {
+							a.setProba(oll.get(i), laactiv * paslapasactiv);
+						}
+						if (oll.get(i).num_o == 0) {
+							a.setProba(oll.get(i), laactiv * paslaactiv);
+						}
+					}
+				} else {
+					for (int i = 0; i < 4; i++) {
+						a.setProba(oll.get(i), i);
+						if (oll.get(i).num_o == 1) {
+							a.setProba(oll.get(i), paslapasactiv * lapasactiv);
+						}
+						if (oll.get(i).num_o == 2) {
+							a.setProba(oll.get(i), paslapasactiv * laactiv);
+						}
+						if (oll.get(i).num_o == 3) {
+							a.setProba(oll.get(i), paslaactiv * lapasactiv);
+						}
+						if (oll.get(i).num_o == 0) {
+							a.setProba(oll.get(i), paslaactiv * laactiv);
+						}
+					}
+				}
+			} else {
+				Distribution<Observation> a = observation.get(all.get(j));
+				for (int i = 0; i < 4; i++) {
+					a.setProba(oll.get(i), i);
+					if (oll.get(i).num_o == 1) {
+						a.setProba(oll.get(i), paslapasactiv * paslapasactiv);
+					}
+					if (oll.get(i).num_o == 2) {
+						a.setProba(oll.get(i), paslapasactiv * paslaactiv);
+					}
+					if (oll.get(i).num_o == 3) {
+						a.setProba(oll.get(i), paslaactiv * paslapasactiv);
+					}
+					if (oll.get(i).num_o == 0) {
+						a.setProba(oll.get(i), paslaactiv * paslaactiv);
+					}
+				}
+			}
+		}
 	}
 
-	double bidule(int a, int b) {
-		if (a == 1) {
-			return lapasactiv;
-		} else if
-
-		(b == 4) {
-			return paslapasactiv;
-		} else {
-			return paslapasactiv;
-		}
+	Distribution<Observation> dist() {
+		return null;
 	}
 
 	// TODO
@@ -149,11 +126,7 @@ public class ProcessusObservation {
 	 * @return probabilité d'observer o sachant s
 	 */
 	public double probaObservation(Observation o, State s) {
-
 		return this.observation.get(s).getProba(o);
-
-		// return 0.0;
-		// throw new Error(); // ** A COMPLETER **
 	}
 
 	/**
@@ -164,15 +137,8 @@ public class ProcessusObservation {
 	 * @return observation faite
 	 */
 	public Observation observer(State depart) {
-		// Random r = new Random();
-		// double d = r.nextDouble();
-
 		Distribution<Observation> ert = this.observation.get(depart);
-
 		return ert.tirage();
-
-		// return null;
-		// throw new Error(); // ** A COMPLETER **
 	}
 
 }

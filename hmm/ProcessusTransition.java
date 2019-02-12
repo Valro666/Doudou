@@ -27,56 +27,29 @@ public class ProcessusTransition {
 			ss[i] = new State(i);
 		}
 
-		// Distribution d = new Distribution<>();
-		//
-		// d.setProba(ss[1], 0.70);
 		int z = 0;
 		for (int i = 0; i < 8; i++) {
 			ss[i] = new State(i);
-			Distribution d = new Distribution<>();
+			Distribution<State> d = new Distribution<State>();
 			for (int j = 0; j < 8; j++) {
-				// ss[i] = new State(i);
-				// Distribution d = new Distribution<>();
-
 				int p = (j + i) % 8;
-				// System.out.print(p + " ");
-				// System.out.print(ss[p].toString()+" ");
 				switch (j) {
 				default:
 					d.setProba(ss[p], 0);
 					break;
 				case 0:
-					// d.setProba(ss[(Math.abs(i+j) % 8)], 0.70);
-					// d.setProba(ss[(Math.abs(i+j) % 8)], 0.70);
 					d.setProba(ss[p], 0.20);
 					break;
 				case 1:
-					// d.setProba(ss[(Math.abs(i+j) % 8)], 0.70);
-					// d.setProba(ss[(Math.abs(i+j) % 8)], 0.70);
 					d.setProba(ss[p], 0.70);
 					break;
 				case 7:
-					// d.setProba(ss[(Math.abs(i+j) % 8)], 0.70);
-					// d.setProba(ss[(Math.abs(i+j) % 8)], 0.70);
 					d.setProba(ss[p], 0.10);
-
 					break;
-
 				}
-				// d.setProba(ss[j % 8], 0.70);
-
 			}
-
-			// System.out.println();
 			transition.put(ss[(i)], d);
 		}
-
-//		for (State sd : ss) {
-//			System.out.println(sd.toString() + " " + transition.get(sd).toString());
-//		}
-
-		// creer la table de transition
-		// throw new Error(); // ** A COMPLETER **
 	}
 
 	/**

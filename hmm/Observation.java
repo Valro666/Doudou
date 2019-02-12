@@ -71,7 +71,6 @@ public class Observation {
 			for (int i = 0; i < 4; i++) {
 				Observation o = new Observation(i);
 				switch (i) {
-				// default:
 				case 1:
 					o.cpt1 = false;
 					o.cpt2 = false;
@@ -114,8 +113,8 @@ public class Observation {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		State other = (State) obj;
-		if (num_o != other.num_etat)
+		Observation other = (Observation) obj;
+		if (num_o != other.num_o)
 			return false;
 		return true;
 	}
@@ -133,8 +132,7 @@ public class Observation {
 		else
 			s = s + "0";
 
-		return "(O" + this.num_o + " " + s+")";
+		return "(O" + this.num_o + " " + s + ")";
 	}
-	// TODO
 
 }

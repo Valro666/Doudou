@@ -62,42 +62,20 @@ public class HMM {
 	 * @return densite à instant ts
 	 */
 	public Distribution<State> maJTransition(Distribution<State> d) {
-		// **********************************************************************************
-		// a faire par etudiants
-		// **********************************************************************************
 
-		ArrayList<Double> ald = new ArrayList<>();
 
+		Distribution<State> trib = new Distribution<>();
 		List<State> all = State.getAll();
-
-		// Distribution ert = new Distribution(d);
-
 		for (int i = 0; i < all.size(); i++) {
 			double res = 0.0;
-			Object tmp = null;
 			for (State ll : all) {
-				tmp = ll;
 				res = res + (this.matriceTransition.probaTransition(ll, all.get(i)) * d.getProba(ll));
 			}
-
-			// ert.setProba(tmp, res);
-			ald.add(res);
-		}
-
-		Distribution trib = new Distribution<>();
-
-		for (int i = 0; i < all.size(); i++) {
-			trib.setProba(all.get(i), ald.get(i));
-		}
-		double b = trib.calculNorme();
-		for (int i = 0; i < all.size(); i++) {
-			trib.setProba(all.get(i), ald.get(i) / b);
+			trib.setProba(all.get(i),res);
 		}
 		trib.normalise();
 
 		return trib;
-
-		// throw new Error(); // ** A COMPLETER **
 	}
 
 	/**
@@ -113,28 +91,12 @@ public class HMM {
 		// **********************************************************************************
 		// a faire par etudiants
 		// **********************************************************************************
-		Distribution<State> tmp = d;// maJTransition(d);
-		// System.out.println(tmp + " inter");
-
+		Distribution<State> tmp = new Distribution<State>(d);
 		List<State> all = State.getAll();
-
-		// double b = tmp.getProba(State.getAll().get(0));
-
 		for (State ll : all) {
-			tmp.setProba(ll, tmp.getProba(ll) * this.matriceObservation.probaObservation(o, ll));
+			tmp.setProba(ll, d.getProba(ll) * this.matriceObservation.probaObservation(o, ll));
 		}
-
-		double norme = tmp.calculNorme();
-
-		/*for (State ll : all) {
-			tmp.setProba(ll, tmp.getProba(ll) / norme);
-		}*/
 		tmp.normalise();
-		// double b2 = tmp.getProba(State.getAll().get(0));
-
-		// System.out.println(b2/b+" doit etre egal a une casse de matrice
-		// obs");
-
 		return tmp;
 
 	}
@@ -151,7 +113,6 @@ public class HMM {
 		// a faire par etudiants
 		// **********************************************************************************
 		Distribution<State> ds = MaJObservation(maJTransition(initiale), o);
-		System.out.println(ds);
 		return ds;
 		
 	}
