@@ -30,7 +30,9 @@ public class MainFiltrage {
 		System.out.println(azerty2 + " <- obtenu2");
 		System.out.println(
 				"S1->0.519, S2->0.109, S3->0.331, S4->0.0, S5->0.0, S6->0.001,S7->0.012, S0->0.026, <- a obtenir");
-
+		// System.out.println(m.matriceObservation.observation.values());
+		System.out.println(m.matriceTransition.transition);
+		System.out.println(m.matriceObservation.observation);
 	}
 
 }

@@ -20,6 +20,7 @@ public class ProcessusTransition {
 	 * creation des transitions correspondant au hamster
 	 */
 	public ProcessusTransition() {
+		System.out.println("droite");
 		this.transition = new HashMap<>();
 		State[] ss = new State[8];
 
@@ -45,6 +46,40 @@ public class ProcessusTransition {
 					break;
 				case 7:
 					d.setProba(ss[p], 0.10);
+					break;
+				}
+			}
+			transition.put(ss[(i)], d);
+		}
+	}
+	
+	public ProcessusTransition(int o) {
+		System.out.println("gauche");
+		this.transition = new HashMap<>();
+		State[] ss = new State[8];
+
+		for (int i = 0; i < 8; i++) {
+			ss[i] = new State(i);
+		}
+
+		int z = 0;
+		for (int i = 0; i < 8; i++) {
+			ss[i] = new State(i);
+			Distribution<State> d = new Distribution<State>();
+			for (int j = 0; j < 8; j++) {
+				int p = (j + i) % 8;
+				switch (j) {
+				default:
+					d.setProba(ss[p], 0);
+					break;
+				case 0:
+					d.setProba(ss[p], 0.20);
+					break;
+				case 1:
+					d.setProba(ss[p], 0.10);
+					break;
+				case 7:
+					d.setProba(ss[p], 0.70);
 					break;
 				}
 			}
