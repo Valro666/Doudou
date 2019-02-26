@@ -51,8 +51,7 @@ public class Distribution<E> {
 	}
 
 	/**
-	 * Constructeur genere une densité avec les memes états mais probabilités
-	 * nulles
+	 * Constructeur genere une densité avec les memes états mais probabilités nulles
 	 * 
 	 * @param liste
 	 *            des états de la densité
@@ -113,6 +112,21 @@ public class Distribution<E> {
 		// throw new Error(); // ** A COMPLETER **
 	}
 
+	public Distribution dedouble() {
+		// **********************************************************************************
+		// a faire par etudiants
+		// **********************************************************************************
+
+		Distribution<E> dis = new Distribution(this);
+
+		for (E e : this.prob.keySet()) {
+			dis.setProba(e, this.prob.get(e));
+		}
+
+		return dis;
+		// throw new Error(); // ** A COMPLETER **
+	}
+
 	/**
 	 * fait un tirage aleatoire selon cette densité
 	 * 
@@ -141,13 +155,53 @@ public class Distribution<E> {
 		// throw new Error(); // ** A COMPLETER **
 	}
 
+	public E maxS() {
+		// **********************************************************************************
+		// TODO a faire par etudiants
+		// **********************************************************************************
+		Random r = new Random();
+		double v = r.nextDouble();
+		double tmp = 0;
+		E te = null;
+		for (E e : this.prob.keySet()) {
+			if (prob.get(e) > tmp) {
+				tmp = prob.get(e);
+				te = e;
+			}
+		}
+
+		return (E) te;
+
+		// throw new Error(); // ** A COMPLETER **
+	}
+	
+	public double maxD() {
+		// **********************************************************************************
+		// TODO a faire par etudiants
+		// **********************************************************************************
+		Random r = new Random();
+		double v = r.nextDouble();
+		double tmp = 0;
+		E te = null;
+		for (E e : this.prob.keySet()) {
+			if (prob.get(e) > tmp) {
+				tmp = prob.get(e);
+				te = e;
+			}
+		}
+
+		return tmp;
+
+		// throw new Error(); // ** A COMPLETER **
+	}
+
 	/**
 	 * methode toString
 	 */
 	public String toString() {
 		String res = "";
 		for (E clef : this.prob.keySet()) {
-			res += clef + "->" + (((int) (this.prob.get(clef) * 1000)) * 1. / 1000);
+			res += "\t "+clef + "->" + (((int) (this.prob.get(clef) * 1000)) * 1. / 1000);
 			res += ", ";
 		}
 		return (res + "\n");

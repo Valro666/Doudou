@@ -29,7 +29,17 @@ public class State {
 	 *            num de l'etat
 	 */
 	public State(int i) {
-		this.num_etat = (i+8) % 8;
+		this.num_etat = (i + 8) % 8;
+	}
+
+	public State suivant() {
+		// this.num_etat = (i+8) % 8;
+		return new State(num_etat + 1);
+	}
+
+	public State precedant() {
+		// this.num_etat = (i+8) % 8;
+		return new State(num_etat - 1);
 	}
 
 	/**
@@ -81,23 +91,22 @@ public class State {
 		int[][] coord = { { 0, 0 }, { 1, 0 }, { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 }, { 0, 1 } };
 		return (coord[this.num_etat]);
 	}
-	
+
 	/**
 	 * permet de retourner id a partir des coordonnees
 	 * 
 	 * @return coordo etat
 	 */
 	public static int retournerId(int x, int y) {
-		int[][] ids= { {0,7,6},{1,-1,5},{2,3,4}};
+		int[][] ids = { { 0, 7, 6 }, { 1, -1, 5 }, { 2, 3, 4 } };
 		return (ids[x][y]);
 	}
-	
+
 	/**
 	 * permet d'afficher un etat
 	 */
-	public String toString()
-	{
-		return "S"+this.num_etat;
+	public String toString() {
+		return "S" + this.num_etat;
 	}
 
 }

@@ -140,5 +140,8 @@ public class ProcessusObservation {
 		Distribution<Observation> ert = this.observation.get(depart);
 		return ert.tirage();
 	}
+	public String toString() {
+		return "" + observation + "";
+	}
 
 }

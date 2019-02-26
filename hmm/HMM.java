@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javafx.util.Pair;
+
 /**
  * classe qui permet de modéliser un HMM
  * 
@@ -32,10 +34,10 @@ public class HMM {
 		// creation des lois de probabilite
 		this.matriceObservation = new ProcessusObservation();
 		Random r = new Random();
-		if (r.nextDouble() >= 0.5)
-			this.matriceTransition = new ProcessusTransition(42);
-		else
-			this.matriceTransition = new ProcessusTransition();
+		// if (r.nextDouble() >= 0.5)
+		// this.matriceTransition = new ProcessusTransition(42);
+		// else
+		this.matriceTransition = new ProcessusTransition();
 	}
 
 	/**
@@ -121,14 +123,14 @@ public class HMM {
 	}
 
 	/**
-	 * méthode qui calcule la densite de probabilité aprés t pas de temps en
-	 * prenant en compte la liste des observations reçues
+	 * méthode qui calcule la densite de probabilité aprés t pas de temps en prenant
+	 * en compte la liste des observations reçues
 	 * 
 	 * @param d
 	 *            la densite initiale
 	 * @param l
-	 *            la liste des obsrevations (la taille correspond au nombre de
-	 *            pas de temps)
+	 *            la liste des obsrevations (la taille correspond au nombre de pas
+	 *            de temps)
 	 * @return la nouvelle densité
 	 */
 	public Distribution<State> filtrage(Distribution<State> d, ArrayList<Observation> l) {
@@ -171,90 +173,75 @@ public class HMM {
 	 * methode qui cherche la trajectoire expliquant au mieux les observations
 	 * algorithme viterbi utilisant la programmation dynamique
 	 * 
-	 * deux phases --> une phase aller pour propagare les probabilités --> une
-	 * phase retour pour remonter le meilleur chemin
+	 * deux phases --> une phase aller pour propagare les probabilités --> une phase
+	 * retour pour remonter le meilleur chemin
 	 * 
 	 * @param obs
 	 *            la séquence d'observations
-	 * @return la séquence d'états expliquant au mieux la séquence
-	 *         d'observations
+	 * @return la séquence d'états expliquant au mieux la séquence d'observations
 	 */
-	public ArrayList<State> viterbi(ArrayList<Observation> obs, Distribution<State> initiale) {
-		// **********************************************************************************
-		// **********************************************************************************
-		// ArrayList<ArrayList<Pair<State, Double>>> viterbiTable = new
-		// ArrayList<>();
-		//Distribution<State> ds = new Distribution<>();
-		ArrayList<Distribution<State>> ads = new ArrayList<>();
-		ads.add(new Distribution<>(initiale));
-		for (State s : State.getAll()) {
-			Double prob = initiale.getProba(s);
-			
-			ads.get(0).setProba(s, prob);
-			// viterbiTable.add(new ArrayList<>());
-			// viterbiTable.get(s.num_etat).add(0, new Pair<>(null, prob));
-			//ds.setProba(s, prob);
-			
-			
-		}
 
-		// propagation des probabilitées
-		for (int index_obs = 0; index_obs < obs.size(); index_obs++) {
-			for (State eArrivee : State.getAll()) {
-				int p = 0 ;
-				double max = -1d;
-				State max_state = null;
-				for (State eDepart : State.getAll()) {
-					/*
-					 * double tmp_prob =
-					 * viterbiTable.get(eDepart.num_etat).get(index_obs).
-					 * getValue() matriceTransition.probaTransition(eDepart,
-					 * eArrivee)
-					 * matriceObservation.probaObservation(obs.get(index_obs),
-					 * eArrivee);
-					 */
-					double tmp = ads.get(index_obs).getProba(eDepart)* matriceTransition.probaTransition(eDepart, eArrivee)
-							* matriceObservation.probaObservation(obs.get(index_obs), eArrivee);
-					
-					if (tmp > max) {
-						max = tmp;
-						max_state = eDepart;
-						
+	public ArrayList<State> viterbi(ArrayList<Observation> obs, Distribution<State> initiale) {
+
+		ArrayList<Distribution> ald = new ArrayList<>();
+
+		ArrayList<State> als = new ArrayList<>();
+
+		ArrayList<State[]> ali = new ArrayList<State[]>();
+
+		als.add(initiale.maxS());
+
+		ald.add(initiale.dedouble());
+		double val = 0;
+		State t = null;
+		for (int i = 0; i < obs.size(); i++) {
+			// for(Observation o : obs) {
+			ald.add(new Distribution<>(initiale));
+			State[] ert = { null, null, null, null, null, null, null, null };
+			ali.add(ert);
+			State Smax = null;
+			double max = 0;
+
+			for (State actu : State.getAll()) {
+				/* if (ald.get(i).getProba(actu) > 0) */ {
+					ArrayList<State> alt = new ArrayList<>();
+					alt.add(actu);
+					alt.add(actu.suivant());
+					alt.add(actu.precedant());
+					for (State suivant : State.getAll()) {
+						double tmp = ald.get(i).getProba(actu) * this.matriceTransition.probaTransition(actu, suivant)
+								* this.matriceObservation.probaObservation(obs.get(i), suivant);
+
+						if (ald.get(i + 1).getProba(suivant) < tmp) {
+							ald.get(i + 1).setProba(suivant, tmp);
+							ali.get(i)[suivant.num_etat] = actu;
+						}
 					}
 				}
-				//viterbiTable.get(eArrivee.num_etat).add(new Pair<>(max_state, max));
-				//ds.setProba(max_state, max);
-				ads.get(index_obs).setProba(eArrivee, max);
-
 			}
+			ald.get(i + 1).normalise();
+			als.add(Smax);
+			Smax = null;
+		}
+		// System.out.println(als);
+
+		// back tracking
+
+		System.out.println(ald);
+
+		for (State[] a : ali) {
+			for (State i : a) {
+				System.out.print(" " + i);
+			}
+			System.out.println();
 		}
 
-		// trouver le max de la derniere colonne de la table viterbi
-		ArrayList<State> serie_etat = new ArrayList<>();
-		Distribution<State> dist = new Distribution<>(initiale);
-		double max = -1;
-		int index_max_prob_state = -1;
-		for (State s : State.getAll()) {
-			/*if (viterbiTable.get(s.num_etat).get(obs.size()).getValue() > max) {
-				index_max_prob_state = s.num_etat;
-				max = viterbiTable.get(s.num_etat).get(obs.size() - 1).getValue();
-			}*/
-			
-			
+		for (int i = ali.size(); i > 0; i--) {
+			State sd = (State) ald.get(i).maxS();
+			System.out.println(sd);
 		}
 
-		// se servire de ce max pour construire la serie des etats
-		serie_etat.add(0, State.getAll().get(index_max_prob_state));
-		// construction de la serie des etats
-		for (int col = obs.size(); col > 0; col--) {
-
-			//State etat = viterbiTable.get(index_max_prob_state).get(col).getKey();
-			serie_etat.add(0, etat);
-			index_max_prob_state = etat.num_etat;
-
-		}
-
-		return serie_etat;
+		return als;
 	}
 
 }
